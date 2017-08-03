@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<title>Infographic</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Import libraries -->
+		<script src="lib/jquery/jquery.3.2.1.js"></script>
+		<script src="lib/bootstrap/bootstrap.3.3.7.js"></script>
+		<link rel="stylesheet" href="lib/bootstrap/bootstrap.3.3.7.css">
+
+		<!-- Import dataset -->
+		<script src="dataset.js"></script>
+
+		<!-- Import infographics -->
+		<script src="js/ObjectArrayCounter.js"></script>
+		<script src="js/ObjectArrayFilter.js"></script>
+		<script src="js/TopList.js"></script>
+		<script src="js/ui/FilterInputUI.js"></script>
+		<script src="js/ui/TopListUI.js"></script>
+
+	</head>
+	<body>
+		<div class="container">
+		  <ul class="nav nav-pills">
+		    <li class="active"><a data-toggle="pill" href="#home">Home</a></li>
+		    <li><a data-toggle="pill" href="#toplist" onclick="loadTopList()">Top List</a></li>
+		    <li><a data-toggle="pill" href="#wordcloud">Word Cloud</a></li>
+		    <li><a data-toggle="pill" href="#linegraph">Line Graph</a></li>
+		    <li><a data-toggle="pill" href="#bargraph">Bar Graph</a></li>
+		    <li><a data-toggle="pill" href="#comparator">Comparator</a></li>
+		  </ul>
+		  
+		  <div class="tab-content">
+		    <div id="home" class="tab-pane fade in active">
+		      <h3>Infographic</h3>
+		      <p>This is an infographic based on data from <a href="dataset.js" target="_blank">dataset.js</a></p>
+		    </div>
+		    <div id="toplist" class="tab-pane fade">
+		      
+		    </div>
+		    <div id="wordcloud" class="tab-pane fade">
+		      <h3>Menu 3</h3>
+		      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+		    </div>
+		    <div id="linegraph" class="tab-pane fade">
+		      <h3>Menu 2</h3>
+		      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+		    </div>
+		    <div id="bargraph" class="tab-pane fade">
+		      <h3>Menu 3</h3>
+		      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+		    </div>
+		    <div id="comparator" class="tab-pane fade">
+		      <h3>Menu 3</h3>
+		      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+		    </div>
+		  </div>
+		</div>
+
+		<script>
+			function loadTopList(id) {
+				const topListContainer = document.querySelector('#toplist');
+
+				const counter = new ObjectArrayCounter(dataset);
+				const countArray = counter.count(x => x.midimadeby);
+				const topList = TopList.fromObjectArray(countArray, 'key', 'count');
+				
+
+				const topListUI = new TopListUI(topList);
+				const topListUIDiv = document.createElement('div');
+				topListUIDiv.appendChild(topListUI.renderAsDOMObject('User', 'MIDI count'));
+
+				const filterUI = new FilterInputUI('topListFilterUpdated');
+				filterUI.addEventListener(e => updateTopListUI(e, topListUI, topListUIDiv), false);				
+				const filterUIDiv = document.createElement('div');
+				filterUIDiv.appendChild(filterUI.renderAsDOMObject());
+
+				topListContainer.innerHTML = '';
+				topListContainer.appendChild(filterUIDiv);
+				topListContainer.appendChild(topListUIDiv);
+			}
+
+			function updateTopListUI(event, topListUI, container) {
+				topListUI.setFilter(event.detail);
+				container.innerHTML = '';
+				container.appendChild(topListUI.renderAsDOMObject('User', 'MIDI count'));
+			}
+		</script>
+	</body>
+</html>
