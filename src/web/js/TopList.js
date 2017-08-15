@@ -1,7 +1,7 @@
 class TopList {
 	
 	constructor(topListArray) {
-		this.topListArray = topListArray || [];
+		this.topListArray = topListArray || new TopListItemList([]);
 	}
 
 	toArray() {
