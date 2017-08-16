@@ -84,8 +84,8 @@ class TopListUI {
 		topListIndexColumn.appendChild(topListIndexImage);
 
 		row.appendChild(topListIndexColumn);
-		row.appendChild(this._createBodyColumn(topListItem.description));
-		row.appendChild(this._createBodyColumn(topListItem.count));
+		row.appendChild(this._createBodyColumn(topListItem.getDescription()));
+		row.appendChild(this._createBodyColumn(topListItem.getScore()));
 
 		return row;
 	}
