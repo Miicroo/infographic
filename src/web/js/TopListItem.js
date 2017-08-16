@@ -20,4 +20,8 @@ class TopListItem {
 
 		return this.score - otherItem.score;
 	}
+
+	static fromObject(obj, objToDescription, objToScore) {
+		return new TopListItem(objToDescription(obj), objToScore(obj));
+	}
 }

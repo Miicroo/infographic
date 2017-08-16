@@ -2,7 +2,7 @@ class TypedList {
 	constructor(inputArray, type) {
 		const initializedArray = inputArray || [];
 		this.throwErrorIfAnyItemIsNotOfType(initializedArray, type);
-		this.elements = initializedArray;
+		this.elements = initializedArray.slice();
 	}
 
 	throwErrorIfAnyItemIsNotOfType(array, type) {

@@ -50,4 +50,13 @@ describe("TopListItem", function() {
 		
 		expect(smallerItem.compareTo(largerItem)).toBeLessThan(0);
 	});
+
+	it("should convert an object to a TopListItem", function() {
+		const myObject = {'name': 'Kalle', 'age': 14, 'score': 600};
+		const item = TopListItem.fromObject(myObject, o => o.name, o => o.age);
+		
+		expect(item.constructor.name).toEqual('TopListItem');
+		expect(item.getDescription()).toEqual('Kalle');
+		expect(item.getScore()).toEqual(14);
+	});
 });
