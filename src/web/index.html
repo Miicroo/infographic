@@ -22,7 +22,7 @@
 		<script src="js/ui/FilterInputUI.js"></script>
 		<script src="js/ui/TopListUI.js"></script>
 		<script src="js/ui/DropDownSelectorUI.js"></script>
-
+		<script src="js/ui/TopListUIContainer.js"></script>
 	</head>
 	<body>
 		<div class="container">
@@ -65,45 +65,10 @@
 		<script>
 			function loadTopList(id) {
 				const topListContainer = document.querySelector('#toplist');
-				const topList = createTopList('midimadeby');
-
-				const topListUI = new TopListUI(topList);
-				const topListUIDiv = document.createElement('div');
-				topListUIDiv.appendChild(topListUI.renderAsDOMObject('midimadeby', 'Count'));
-
-				const filterUI = new FilterInputUI('topListFilterUpdated');
-				filterUI.addEventListener(e => filterTopListUI(e.detail, , topListUIDiv), false);				
-				const filterUIDiv = document.createElement('div');
-				filterUIDiv.appendChild(filterUI.renderAsDOMObject());
-
-				const keySelectorUI = new DropDownSelectorUI(Object.keys(dataset[0]).sort().map(x => x.charAt(0).toUpperCase() + x.substring(1)), 'topListKeyChanged');
-				keySelectorUI.addEventListener(e => updateTopListUI(e.detail, topListUI, topListUIDiv), false);
+				const topListUIContainer = new TopListUIContainer(dataset);
 
 				topListContainer.innerHTML = '';
-				topListContainer.appendChild(keySelectorUI.renderAsDOMObject());
-				topListContainer.appendChild(filterUIDiv);
-				topListContainer.appendChild(topListUIDiv);
-			}
-
-			function filterTopListUI(filtertopListUI, topListUI, container) {
-				topListUI.setFilter(filter);
-				container.innerHTML = '';
-				container.appendChild(topListUI.renderAsDOMObject('???', 'Count'));
-			}
-
-			function updateTopListUI(key, topListUI, container) {
-				const filter = topListUI._filter || '';
-				topListUI = new TopListUI(createTopList(key));
-				topListUI.setFilter(filter);
-				container.innerHTML = '';
-				container.appendChild(topListUI.renderAsDOMObject(key, 'Count'));
-			}
-
-			function createTopList(key) {
-				const counter = new ObjectArrayCounter(dataset);
-				const countArray = counter.count(x => x[key.toLowerCase()]);
-				const topListItemArray = countArray.map(obj => TopListItem.fromObject(obj, o => o.key, o => o.count));
-				return new TopList(topListItemArray);
+				topListContainer.appendChild(topListUIContainer.renderAsDOMObject());
 			}
 		</script>
 	</body>

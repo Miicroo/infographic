@@ -3,14 +3,24 @@ class TopListUI {
 	constructor(topList) {
 		this.topList = topList;
 		this.filter = '';
+		this.descriptionHeader = 'Description';
+		this.countHeader = 'Count';
 	}
 
-	renderAsDOMObject(descriptionHeader, countHeader) {
-		return this._createTopListTable(descriptionHeader, countHeader);
+	setDescriptionHeader(descriptionHeader) {
+		this.descriptionHeader = descriptionHeader;
+	}
+
+	setCountHeader(countHeader) {
+		this.countHeader = countHeader;
 	}
 
 	setFilter(filter) {
 		this.filter = filter;
+	}
+
+	renderAsDOMObject() {
+		return this._createTopListTable(this.descriptionHeader, this.countHeader);
 	}
 
 	_createTopListTable(descriptionHeader, countHeader) {
