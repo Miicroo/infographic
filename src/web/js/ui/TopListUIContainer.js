@@ -1,9 +1,10 @@
 class TopListUIContainer {
 
 	constructor(array) {
-		this.filter = '';
+		this.currentFilter = '';
 		this.dataset = array || [];
 		this.datasetKeys = Object.keys(this.dataset[0]).sort().map(x => x.charAt(0).toUpperCase() + x.substring(1));
+		this.currentKey = this.datasetKeys[0];
 
 		this._createComponents();
 	}
@@ -15,50 +16,59 @@ class TopListUIContainer {
 	_createComponents() {
 		this.topListContainer = document.createElement('div');
 
-		this._createTopListUI(this.datasetKeys[0]);
-
-		const filterUI = new FilterInputUI('topListFilterUpdated');
-		filterUI.addEventListener(e => this._filterTopListUI(e.detail), false);				
-		const filterUIDiv = document.createElement('div');
-		filterUIDiv.appendChild(filterUI.renderAsDOMObject());
-
-		const keySelectorUI = new DropDownSelectorUI(this.datasetKeys, 'topListKeyChanged');
-		keySelectorUI.addEventListener(e => this._changeTopListKey(e.detail), false);
+		const keySelectorUI = this._createKeySelectorUI();
+		const filterUI = this._createFilterUI();
+		this._createTopListUI();
+		
 
 		this.topListContainer.innerHTML = '';
 		this.topListContainer.appendChild(keySelectorUI.renderAsDOMObject());
-		this.topListContainer.appendChild(filterUIDiv);
+		this.topListContainer.appendChild(filterUI.renderAsDOMObject());
 		this.topListContainer.appendChild(this.topListUIDiv);
 	}
 
-	_createTopListUI(key) {
-		const topList = this._createTopList(key);
+	_createTopListUI() {
+		const topList = this._createTopList();
 		
-		this.topListUI = new TopListUI(topList);
-		this.topListUI.setDescriptionHeader(key);
-		this.topListUI.setCountHeader('Count');
-		this.topListUI.setFilter(this.filter);
+		const topListUI = new TopListUI(topList);
+		topListUI.setDescriptionHeader(this.currentKey);
+		topListUI.setCountHeader('Count');
 
 		this.topListUIDiv = this.topListUIDiv || document.createElement('div');
 		this.topListUIDiv.innerHTML = '';
-		this.topListUIDiv.appendChild(this.topListUI.renderAsDOMObject());
+		this.topListUIDiv.appendChild(topListUI.renderAsDOMObject());
 	}
 
-	_createTopList(key) {
-		const counter = new ObjectArrayCounter(dataset);
-		const countArray = counter.count(x => x[key.toLowerCase()]);
+	_createTopList() {
+		const filter = new ObjectArrayFilter(this.dataset);
+		const filteredDataset = filter.filterByValue(this.currentFilter);
+
+		const counter = new ObjectArrayCounter(filteredDataset);
+		const countArray = counter.count(x => x[this.currentKey.toLowerCase()]);
 		const topListItemArray = countArray.map(obj => TopListItem.fromObject(obj, o => o.key, o => o.count));
+
 		return new TopList(topListItemArray);
 	}
 
-	_filterTopListUI(filter) {
-		this.filter = filter;
-		this.topListUI.setFilter(filter);
-		this.topListUIDiv.innerHTML = '';
-		this.topListUIDiv.appendChild(this.topListUI.renderAsDOMObject());
+	_createKeySelectorUI() {
+		const keySelectorUI = new DropDownSelectorUI(this.datasetKeys, 'topListKeyChanged');
+		keySelectorUI.addEventListener(e => this._changeTopListKey(e.detail), false);
+		return keySelectorUI;
 	}
 
 	_changeTopListKey(newKey) {
-		this._createTopListUI(newKey);
+		this.currentKey = newKey;
+		this._createTopListUI();
+	}
+
+	_createFilterUI() {
+		const filterUI = new FilterInputUI('topListFilterUpdated');
+		filterUI.addEventListener(e => this._filterTopListUI(e.detail), false);
+		return filterUI;
+	}
+
+	_filterTopListUI(filter) {
+		this.currentFilter = filter;
+		this._createTopListUI();
 	}
 }

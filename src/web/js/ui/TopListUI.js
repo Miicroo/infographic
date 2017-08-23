@@ -2,7 +2,6 @@ class TopListUI {
 
 	constructor(topList) {
 		this.topList = topList;
-		this.filter = '';
 		this.descriptionHeader = 'Description';
 		this.countHeader = 'Count';
 	}
@@ -13,10 +12,6 @@ class TopListUI {
 
 	setCountHeader(countHeader) {
 		this.countHeader = countHeader;
-	}
-
-	setFilter(filter) {
-		this.filter = filter;
 	}
 
 	renderAsDOMObject() {
@@ -80,9 +75,7 @@ class TopListUI {
 	}
 
 	_getTopListAsArray() {
-		const array = this.topList.toArray();
-		const filter = new ObjectArrayFilter(array);
-		return filter.filterByValue(this.filter);
+		return this.topList.toArray();
 	}
 
 	_createTableBodyRow(topListIndex, topListItem) {
