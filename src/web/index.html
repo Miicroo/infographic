@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<!-- Import libraries -->
+		<script src="lib/WordCloud.js"></script>
 		<script src="lib/jquery/jquery.3.2.1.js"></script>
 		<script src="lib/bootstrap/bootstrap.3.3.7.js"></script>
 		<link rel="stylesheet" href="lib/bootstrap/bootstrap.3.3.7.css">
@@ -18,18 +19,21 @@
 		<script src="js/TopListItem.js"></script>
 		<script src="js/TypedList.js"></script>
 		<script src="js/TopList.js"></script>
+		<script src="js/WordCloudItem.js"></script>
+		<script src="js/WordCloudItemList.js"></script>
 
+		<script src="js/ui/DropDownSelectorUI.js"></script>
 		<script src="js/ui/FilterInputUI.js"></script>
 		<script src="js/ui/TopListUI.js"></script>
-		<script src="js/ui/DropDownSelectorUI.js"></script>
 		<script src="js/ui/TopListUIContainer.js"></script>
+		<script src="js/ui/WordCloudUI.js"></script>
 	</head>
 	<body>
 		<div class="container">
 		  <ul class="nav nav-pills">
 		    <li class="active"><a data-toggle="pill" href="#home">Home</a></li>
 		    <li><a data-toggle="pill" href="#toplist" onclick="loadTopList()">Top List</a></li>
-		    <li><a data-toggle="pill" href="#wordcloud">Word Cloud</a></li>
+		    <li><a data-toggle="pill" href="#wordcloud" onclick="loadWordCloud()">Word Cloud</a></li>
 		    <li><a data-toggle="pill" href="#linegraph">Line Graph</a></li>
 		    <li><a data-toggle="pill" href="#bargraph">Bar Graph</a></li>
 		    <li><a data-toggle="pill" href="#comparator">Comparator</a></li>
@@ -41,10 +45,7 @@
 		      <p>This is an infographic based on data from <a href="dataset.js" target="_blank">dataset.js</a></p>
 		    </div>
 		    <div id="toplist" class="tab-pane fade" style="padding:25px 0px 0px 0px;"></div>
-		    <div id="wordcloud" class="tab-pane fade">
-		      <h3>Menu 3</h3>
-		      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-		    </div>
+		    <div id="wordcloud" class="tab-pane fade" style="padding:25px 0px 0px 0px;"></div>
 		    <div id="linegraph" class="tab-pane fade">
 		      <h3>Menu 2</h3>
 		      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
@@ -61,12 +62,41 @@
 		</div>
 
 		<script>
-			function loadTopList(id) {
+			function loadTopList() {
 				const topListContainer = document.querySelector('#toplist');
 				const topListUIContainer = new TopListUIContainer(dataset);
 
 				topListContainer.innerHTML = '';
 				topListContainer.appendChild(topListUIContainer.renderAsDOMObject());
+			}
+
+			function loadWordCloud() {
+				
+				const wordCloudContainer = document.querySelector('#wordcloud');
+				const wordCloudUI = new WordCloudUI(getWCList());
+
+				wordCloudContainer.innerHTML = '';
+				wordCloudContainer.appendChild(wordCloudUI.renderAsDOMObject());
+			}
+
+			function getWCList() {
+				longList = dataset.map(o => getVals(o)).reduce((agg, item) => agg.concat(item), []);
+				counted = new ObjectArrayCounter(longList).count(x => x);
+				awc = counted.map(c => WordCloudItem.fromObject(c, x => x.key, x => x.count)).sort((i1, i2) => i2.getWeight()-i1.getWeight()).slice(0, 1);
+				wcList = new WordCloudItemList(awc);
+
+				return wcList;
+			}
+
+			function getVals(obj) {
+				const words = [];
+				for (var key in obj) {
+					if(key == 'channels') {
+						continue;
+					}
+    				words.push(obj[key]);
+				}
+				return words;
 			}
 		</script>
 	</body>
