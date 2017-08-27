@@ -24,8 +24,8 @@
 
 		<script src="js/ui/DropDownSelectorUI.js"></script>
 		<script src="js/ui/FilterInputUI.js"></script>
+		<script src="js/ui/TopListTableUI.js"></script>
 		<script src="js/ui/TopListUI.js"></script>
-		<script src="js/ui/TopListUIContainer.js"></script>
 		<script src="js/ui/WordCloudUI.js"></script>
 	</head>
 	<body>
@@ -64,10 +64,10 @@
 		<script>
 			function loadTopList() {
 				const topListContainer = document.querySelector('#toplist');
-				const topListUIContainer = new TopListUIContainer(dataset);
+				const topListUI = new TopListUI(dataset);
 
 				topListContainer.innerHTML = '';
-				topListContainer.appendChild(topListUIContainer.renderAsDOMObject());
+				topListContainer.appendChild(topListUI.renderAsDOMObject());
 			}
 
 			function loadWordCloud() {

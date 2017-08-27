@@ -1,113 +1,74 @@
 class TopListUI {
 
-	constructor(topList) {
-		this.topList = topList;
-		this.descriptionHeader = 'Description';
-		this.countHeader = 'Count';
-	}
+	constructor(array) {
+		this.currentFilter = '';
+		this.dataset = array || [];
+		this.datasetKeys = Object.keys(this.dataset[0]).sort().map(x => x.charAt(0).toUpperCase() + x.substring(1));
+		this.currentKey = this.datasetKeys[0];
 
-	setDescriptionHeader(descriptionHeader) {
-		this.descriptionHeader = descriptionHeader;
-	}
-
-	setCountHeader(countHeader) {
-		this.countHeader = countHeader;
+		this._createComponents();
 	}
 
 	renderAsDOMObject() {
-		return this._createTopListTable(this.descriptionHeader, this.countHeader);
+		return this.topListContainer;
 	}
 
-	_createTopListTable(descriptionHeader, countHeader) {
-		const table = this._createTable();
-		const header = this._createHeader(descriptionHeader, countHeader);
-		const body = this._createTableBody();
-		this._appendContentToTableBody(body);
+	_createComponents() {
+		this.topListContainer = document.createElement('div');
 
-		table.appendChild(header);
-		table.appendChild(body);
+		const keySelectorUI = this._createKeySelectorUI();
+		const filterUI = this._createFilterUI();
+		this._createTopListTableUI();
+		
 
-		return table;
+		this.topListContainer.innerHTML = '';
+		this.topListContainer.appendChild(keySelectorUI.renderAsDOMObject());
+		this.topListContainer.appendChild(filterUI.renderAsDOMObject());
+		this.topListContainer.appendChild(this.topListTableUIDiv);
 	}
 
-	_createTable() {
-		const table = document.createElement('table');
-		table.classList.add('table');
-		table.classList.add('table-striped');
+	_createTopListTableUI() {
+		const topList = this._createTopList();
+		
+		const topListTableUI = new TopListTableUI(topList);
+		topListTableUI.setDescriptionHeader(this.currentKey);
+		topListTableUI.setCountHeader('Count');
 
-		return table;
+		this.topListTableUIDiv = this.topListTableUIDiv || document.createElement('div');
+		this.topListTableUIDiv.innerHTML = '';
+		this.topListTableUIDiv.appendChild(topListTableUI.renderAsDOMObject());
 	}
 
-	_createHeader(descriptionHeader, countHeader) {
-		const thead = document.createElement('thead');
-		const row = document.createElement('tr');
+	_createTopList() {
+		const filter = new ObjectArrayFilter(this.dataset);
+		const filteredDataset = filter.filterByValue(this.currentFilter);
 
-		row.appendChild(this._createHeaderColumn(''));
-		row.appendChild(this._createHeaderColumn(descriptionHeader));
-		row.appendChild(this._createHeaderColumn(countHeader));
+		const counter = new ObjectArrayCounter(filteredDataset);
+		const countArray = counter.count(x => x[this.currentKey.toLowerCase()]);
+		const topListItemArray = countArray.map(obj => TopListItem.fromObject(obj, o => o.key, o => o.count));
 
-		thead.appendChild(row);
-
-		return thead;
+		return new TopList(topListItemArray);
 	}
 
-	_createHeaderColumn(textContent) {
-		return this._createColumnWithTagTypeAndText('th', textContent);
+	_createKeySelectorUI() {
+		const keySelectorUI = new DropDownSelectorUI(this.datasetKeys, 'topListKeyChanged');
+		keySelectorUI.addEventListener(e => this._changeTopListKey(e.detail), false);
+		return keySelectorUI;
 	}
 
-	_createColumnWithTagTypeAndText(columnType, textContent) {
-		const column = document.createElement(columnType);
-		const textNode = document.createTextNode(textContent);
-		column.appendChild(textNode);
-
-		return column;
+	_changeTopListKey(newKey) {
+		this.currentKey = newKey;
+		this._createTopListTableUI();
 	}
 
-	_createTableBody() {
-		return document.createElement('tbody');
+	_createFilterUI() {
+		const filterUI = new FilterInputUI('topListFilterUpdated');
+		filterUI.addEventListener(e => this._filterTopListTableUI(e.detail), false);
+		return filterUI;
 	}
 
-	_appendContentToTableBody(tableBody) {
-		const topListAsArray = this._getTopListAsArray();
-		topListAsArray.forEach((item, index) => {
-			tableBody.appendChild(this._createTableBodyRow(index, item));
-		});
-	}
-
-	_getTopListAsArray() {
-		return this.topList.toArray();
-	}
-
-	_createTableBodyRow(topListIndex, topListItem) {
-		const row = document.createElement('tr');
-
-		const topListIndexColumn = document.createElement('th');
-		topListIndexColumn.setAttribute('scope', 'row');
-		const topListIndexImage = this._getNodeForListIndex(topListIndex);
-		topListIndexColumn.appendChild(topListIndexImage);
-
-		row.appendChild(topListIndexColumn);
-		row.appendChild(this._createBodyColumn(topListItem.getDescription()));
-		row.appendChild(this._createBodyColumn(topListItem.getScore()));
-
-		return row;
-	}
-
-	_getNodeForListIndex(index) {
-		if(index > 2) {
-			return document.createTextNode(`${index+1}`);
-		} else {
-			const images = ['gold.png', 'silver.png', 'bronze.png'];
-			const img = document.createElement('img');
-			img.src = `img/${images[index]}`;
-			img.width = 16;
-			img.height = 21;
-
-			return img;
-		}
-	}
-
-	_createBodyColumn(textContent) {
-		return this._createColumnWithTagTypeAndText('td', textContent);
+	_filterTopListTableUI(filter) {
+		this.currentFilter = filter;
+		this._createTopListTableUI();
 	}
 }
