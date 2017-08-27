@@ -7,7 +7,7 @@ class ObjectArray {
 	_throwErrorIfArrayContainsNonObjects(array) {
 		array.forEach(obj => {
 			if(typeof obj !== 'object') {
-				thrw new new Error(`Error: ${obj} is not an object!`);
+				throw new Error(`Error: ${obj} is not an object!`);
 			}
 		});
 	}
@@ -17,7 +17,15 @@ class ObjectArray {
 	}
 
 	keys() {
-		const nonUniqueKeys = this.array.map(o => Object.keys(o));
-		console.log(nonUniqueKeys);
+		const uniqueKeys = this.array.reduce((keys, obj) => {
+			Object.keys(obj).forEach(key => {
+				if(keys.indexOf(key) !== -1){
+					keys.push(key);
+				}
+			});
+			return keys;
+		}, []);
+		
+		return uniqueKeys;
 	}
 }
