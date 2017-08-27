@@ -13,19 +13,19 @@ class ObjectArray {
 	}
 
 	asArray() {
-		return this.array.splice(0);
+		return this.array.slice();
 	}
 
 	keys() {
 		const uniqueKeys = this.array.reduce((keys, obj) => {
 			Object.keys(obj).forEach(key => {
-				if(keys.indexOf(key) !== -1){
+				if(keys.indexOf(key) === -1) {
 					keys.push(key);
 				}
 			});
 			return keys;
 		}, []);
-		
+
 		return uniqueKeys;
 	}
 }
