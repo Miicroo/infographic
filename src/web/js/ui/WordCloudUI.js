@@ -16,6 +16,7 @@ class WordCloudUI {
 		canvas.width = 1000;
 		canvas.height = 600;
 		canvas.id = 'wordCloudCanvas';
+		canvas.style.border = "thick solid #0000FF";
 
 		this.wordCloud = WordCloud(canvas, {list: this.wordCloudItemList.toWordCloudArray()});
 
