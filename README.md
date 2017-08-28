@@ -13,7 +13,7 @@ Uses an object array to create a sorted list based on number of occurrences. The
 
 <p align="center">
 	<img src="https://raw.githubusercontent.com/Miicroo/infographic/master/resources/docs/top_list_filtered.png" alt="Example top list" title="Example top list"/><br />
-	<i>Example of filtered top list sorted by 'Artist', filtered by 'Trance'. Thus showing any artists that are related to trance in the dataset.</i>
+	<i>Example of top list sorted by 'Artist', filtered by 'Trance'. Thus showing any artists that are related to trance in the dataset.</i>
 </p>
 
 ### Word cloud
