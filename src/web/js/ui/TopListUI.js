@@ -1,9 +1,11 @@
 class TopListUI {
 
-	constructor(array) {
+	constructor(objectArray) {
 		this.currentFilter = '';
-		this.dataset = array || [];
-		this.datasetKeys = Object.keys(this.dataset[0]).sort().map(x => x.charAt(0).toUpperCase() + x.substring(1));
+		const validObjectArray = objectArray && objectArray.asArray().length > 0;
+		this.dataset = validObjectArray ? objectArray.asArray() : [];
+		this.datasetKeys = validObjectArray ? objectArray.keys() : [];
+		this.datasetKeys = this.datasetKeys.map(k => k.charAt(0).toUpperCase() + k.substring(1));
 		this.currentKey = this.datasetKeys[0];
 
 		this._createComponents();
