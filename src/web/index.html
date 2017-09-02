@@ -82,9 +82,9 @@
 			function getWCList() {
 				longList = dataset.map(o => getVals(o)).reduce((agg, item) => agg.concat(item), []);
 				counted = new ObjectArrayCounter(longList).count(x => x);
-				awc = counted.map(c => WordCloudItem.fromObject(c, x => x.key, x => x.count)).sort((i1, i2) => i2.getWeight()-i1.getWeight());
+				awc = counted.map(c => WordCloudItem.fromObject(c, x => x.key, x => x.count)).sort((i1, i2) => i2.getWeight()-i1.getWeight()).splice(0,30);
 
-				const myMax = 10000;
+				const myMax = 1000;
 				const allMax = awc.reduce((count, item) => count+item.getWeight(), 0);
 				console.log(allMax);
 				for(i = 0; i<awc.length; i++) {
@@ -106,6 +106,14 @@
     				words.push(obj[key]);
 				}
 				return words;
+			}
+
+			function generateLine() {
+				var myLineChart = new Chart(ctx, {
+				    type: 'line',
+				    data: data,
+				    options: options
+				});
 			}
 		</script>
 	</body>
