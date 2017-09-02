@@ -14,6 +14,7 @@
 		<script src="dataset.js"></script>
 
 		<!-- Import infographics -->
+		<script src="js/ObjectArray.js"></script>
 		<script src="js/ObjectArrayCounter.js"></script>
 		<script src="js/ObjectArrayFilter.js"></script>
 		<script src="js/TopListItem.js"></script>
@@ -64,7 +65,7 @@
 		<script>
 			function loadTopList() {
 				const topListContainer = document.querySelector('#toplist');
-				const topListUI = new TopListUI(dataset);
+				const topListUI = new TopListUI(new ObjectArray(dataset));
 
 				topListContainer.innerHTML = '';
 				topListContainer.appendChild(topListUI.renderAsDOMObject());
