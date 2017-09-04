@@ -1,0 +1,17 @@
+{
+  "name": "infographic",
+  "description": "infographic test suite using Jasmine, Istanbul, and Karma",
+  "main": "sqrt.js",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "devDependencies": {
+    "karma": "^1.7.1",
+    "karma-coverage": "^1.1.1",
+    "karma-coverage-es6": "^0.2.7"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/karma start my.conf.js"
+  }
+}

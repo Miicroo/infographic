@@ -22,12 +22,16 @@
 		<script src="js/TopList.js"></script>
 		<script src="js/WordCloudItem.js"></script>
 		<script src="js/WordCloudItemList.js"></script>
+		<script src="js/ComparatorItem.js"></script>
+		<script src="js/Comparator.js"></script>
 
 		<script src="js/ui/DropDownSelectorUI.js"></script>
 		<script src="js/ui/FilterInputUI.js"></script>
 		<script src="js/ui/TopListTableUI.js"></script>
 		<script src="js/ui/TopListUI.js"></script>
 		<script src="js/ui/WordCloudUI.js"></script>
+		<script src="js/ui/ComparatorTableUI.js"></script>
+		<script src="js/ui/ComparatorUI.js"></script>
 	</head>
 	<body>
 		<div class="container">
@@ -37,7 +41,7 @@
 		    <li><a data-toggle="pill" href="#wordcloud" onclick="loadWordCloud()">Word Cloud</a></li>
 		    <li><a data-toggle="pill" href="#linegraph">Line Graph</a></li>
 		    <li><a data-toggle="pill" href="#bargraph">Bar Graph</a></li>
-		    <li><a data-toggle="pill" href="#comparator">Comparator</a></li>
+		    <li><a data-toggle="pill" href="#comparator" onclick="loadComparator()">Comparator</a></li>
 		  </ul>
 		  
 		  <div class="tab-content">
@@ -55,10 +59,7 @@
 		      <h3>Menu 3</h3>
 		      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
 		    </div>
-		    <div id="comparator" class="tab-pane fade">
-		      <h3>Menu 3</h3>
-		      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-		    </div>
+		    <div id="comparator" class="tab-pane fade"></div>
 		  </div>
 		</div>
 
@@ -115,6 +116,14 @@
 				    data: data,
 				    options: options
 				});
+			}
+
+			function loadComparator() {
+				const container = document.querySelector('#comparator');
+				const ui = new ComparatorUI();
+
+				container.innerHTML = '';
+				container.appendChild(ui.renderAsDOMObject('frozensunrise', 'Aw8'));
 			}
 		</script>
 	</body>
